@@ -23,7 +23,7 @@ defmodule SoftRepo do
 
       _ ->
         opts = Keyword.drop(opts, [:with_thrash])
-        all(queryable, opts)
+        @repo.all(queryable, opts)
     end
   end
 
@@ -43,7 +43,7 @@ defmodule SoftRepo do
 
       _ ->
         opts = Keyword.drop(opts, [:with_thrash])
-        get(queryable, id, opts)
+        @repo.get(queryable, id, opts)
     end
   end
 
@@ -61,7 +61,7 @@ defmodule SoftRepo do
         @repo.delete(struct, opts)
 
       _ ->
-        delete(struct)
+        @repo.delete(struct)
     end
   end
 
@@ -78,13 +78,13 @@ defmodule SoftRepo do
         @repo.delete_all(queryable, opts)
 
       _ ->
-        delete_all(queryable)
+        @repo.delete_all(queryable)
     end
   end
 
   def restore(queryable, id) do
     changeset = change(get!(queryable, id), deleted_at: nil)
-    update(changeset)
+    @repo.update(changeset)
   end
 
   defp schema_fields(%{from: {_source, schema}}) when schema != nil,
@@ -115,7 +115,7 @@ defmodule SoftRepo do
   defp with_force_option?(opts), do: Keyword.get(opts, :force)
 
   defdelegate config(), to: @repo
-  
+
   defdelegate get!(queryable, id, opts \\ []), to: @repo
 
   defdelegate get_by(queryable, clauses, opts \\ []), to: @repo
