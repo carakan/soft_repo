@@ -7,8 +7,8 @@ defmodule SoftRepo do
 
   @repo SoftRepo.Client.repo()
 
-  require SoftRepo.Extension
-  SoftRepo.Extension.extends @repo
+  # require SoftRepo.Extension
+  # SoftRepo.Extension.extends @repo
 
   def all(queryable, opts \\ [])
 
@@ -86,7 +86,7 @@ defmodule SoftRepo do
   end
 
   def restore(queryable, id) do
-    changeset = change(get!(queryable, id), deleted_at: nil)
+    changeset = change(@repo.get!(queryable, id), deleted_at: nil)
     @repo.update(changeset)
   end
 
