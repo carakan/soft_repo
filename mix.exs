@@ -5,7 +5,7 @@ defmodule SoftRepo.MixProject do
     [
       app: :soft_repo,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "> 1.2",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -23,13 +23,13 @@ defmodule SoftRepo.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, "~> 2.2.0"},
+      {:ecto, ">= 2.0.0 and < 3.0.0"},
     ]
   end
 
   defp description do
     """
-    Soft repo with Ecto.
+    Soft delete using Ecto repo.
     """
   end
 
