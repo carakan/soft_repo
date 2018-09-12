@@ -1,6 +1,5 @@
 defmodule SoftRepo do
   import Ecto.Changeset, only: [change: 2]
-  import Ecto.DateTime, only: [utc: 0]
   import Ecto.Query, only: [where: 2]
   import Ecto.Queryable, only: [to_query: 1]
   require Ecto.Query
@@ -50,7 +49,7 @@ defmodule SoftRepo do
   def delete(struct, opts \\ [])
 
   def delete(struct, opts) when length(opts) == 0 do
-    changeset = change(struct, deleted_at: utc())
+    changeset = change(struct, deleted_at: DateTime.utc_now())
     @repo.update(changeset)
   end
 
@@ -68,7 +67,7 @@ defmodule SoftRepo do
   def delete_all(queryable, opts \\ [])
 
   def delete_all(queryable, opts) when length(opts) == 0 do
-    @repo.update_all(queryable, set: [deleted_at: utc()])
+    @repo.update_all(queryable, set: [deleted_at: DateTime.utc_now()])
   end
 
   def delete_all(queryable, opts) when length(opts) > 0 do
@@ -129,6 +128,7 @@ defmodule SoftRepo do
   defdelegate insert_or_update(changeset, opts \\ []), to: @repo
   defdelegate one!(queryable, opts \\ []), to: @repo
   defdelegate one(queryable, opts \\ []), to: @repo
+
   @doc """
   Scrivener pagination.
   """
