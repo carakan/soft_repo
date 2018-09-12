@@ -5,7 +5,7 @@ defmodule SoftRepo.MixProject do
     [
       app: :soft_repo,
       version: "0.1.0",
-      elixir: "> 1.2",
+      elixir: "~> 1.4",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -24,6 +24,7 @@ defmodule SoftRepo.MixProject do
   defp deps do
     [
       {:ecto, ">= 2.0.0 and < 3.0.0"},
+      {:ex_doc, "~> 0.19.0", only: :dev}
     ]
   end
 
