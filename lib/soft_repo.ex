@@ -128,7 +128,7 @@ defmodule SoftRepo do
   def paginate(queryable, opts) do
     opts = Keyword.drop(opts, [:with_thrash])
     queryable = exclude_thrash(queryable)
-    @repo.queryable(queryable, opts)
+    @repo.paginate(queryable, opts)
   end
   defdelegate preload(structs_or_struct_or_nil, preloads, opts \\ []), to: @repo
   defdelegate rollback(value), to: @repo
