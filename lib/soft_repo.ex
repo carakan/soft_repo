@@ -6,6 +6,8 @@ defmodule SoftRepo do
 
   @repo SoftRepo.Client.repo()
 
+  def all(queryable, opts \\ [])
+
   def all(queryable, opts = [with_thrash: false]) do
     opts = Keyword.drop(opts, [:with_thrash])
     @repo.all(queryable, opts)
@@ -16,6 +18,8 @@ defmodule SoftRepo do
     queryable = exclude_thrash(queryable)
     @repo.all(queryable, opts)
   end
+
+  def get(queryable, id, opts \\ [])
 
   def get(queryable, id, opts = [with_thrash: false]) do
     opts = Keyword.drop(opts, [:with_thrash])
@@ -114,6 +118,8 @@ defmodule SoftRepo do
   @doc """
   Scrivener pagination.
   """
+  def paginate(queryable, opts \\ [])
+
   def paginate(queryable, opts = [with_thrash: false]) do
     opts = Keyword.drop(opts, [:with_thrash])
     @repo.paginate(queryable, opts)
