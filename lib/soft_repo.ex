@@ -6,44 +6,26 @@ defmodule SoftRepo do
 
   @repo SoftRepo.Client.repo()
 
-  def all(queryable, opts \\ [])
-
-  def all(queryable, opts) when length(opts) == 0 do
-    queryable = exclude_thrash(queryable)
-    @repo.all(queryable)
+  def all(queryable, opts = [with_thrash: false]) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    @repo.all(queryable, opts)
   end
 
-  def all(queryable, opts) when length(opts) > 0 do
-    case with_thrash_option?(opts) do
-      true ->
-        queryable = exclude_thrash(queryable, false)
-        opts = Keyword.drop(opts, [:with_thrash])
-        @repo.all(queryable, opts)
-
-      _ ->
-        opts = Keyword.drop(opts, [:with_thrash])
-        @repo.all(queryable, opts)
-    end
+  def all(queryable, opts) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    queryable = exclude_thrash(queryable)
+    @repo.all(queryable, opts)
   end
 
-  def get(queryable, id, opts \\ [])
-
-  def get(queryable, id, opts) when length(opts) == 0 do
-    queryable = exclude_thrash(queryable)
+  def get(queryable, id, opts = [with_thrash: false]) do
+    opts = Keyword.drop(opts, [:with_thrash])
     @repo.get(queryable, id, opts)
   end
 
-  def get(queryable, id, opts) when length(opts) > 0 do
-    case with_thrash_option?(opts) do
-      true ->
-        queryable = exclude_thrash(queryable, false)
-        opts = Keyword.drop(opts, [:with_thrash])
-        @repo.get(queryable, id, opts)
-
-      _ ->
-        opts = Keyword.drop(opts, [:with_thrash])
-        @repo.get(queryable, id, opts)
-    end
+  def get(queryable, id, opts) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    queryable = exclude_thrash(queryable)
+    @repo.get(queryable, id, opts)
   end
 
   def delete(struct, opts \\ [])
@@ -132,7 +114,16 @@ defmodule SoftRepo do
   @doc """
   Scrivener pagination.
   """
-  defdelegate paginate(pageable, options \\ []), to: @repo
+  def paginate(queryable, opts = [with_thrash: false]) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    @repo.paginate(queryable, opts)
+  end
+
+  def paginate(queryable, opts) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    queryable = exclude_thrash(queryable)
+    @repo.queryable(queryable, opts)
+  end
   defdelegate preload(structs_or_struct_or_nil, preloads, opts \\ []), to: @repo
   defdelegate rollback(value), to: @repo
   defdelegate start_link(opts \\ []), to: @repo
