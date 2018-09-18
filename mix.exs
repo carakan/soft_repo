@@ -23,6 +23,7 @@ defmodule SoftRepo.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:credo, "~> 0.10.1", only: :dev},
       {:ecto, ">= 2.0.0 and < 3.0.0"},
       {:ex_doc, "~> 0.19.0", only: :dev}
     ]
