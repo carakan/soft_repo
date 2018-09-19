@@ -82,16 +82,13 @@ defmodule SoftRepo do
     Enum.member?(fields, column)
   end
 
-  defp exclude_thrash(queryable, exclude \\ true) do
+  defp exclude_thrash(queryable) do
     case field_exists?(queryable, :deleted_at) do
       false ->
         queryable
 
       true ->
-        cond do
-          exclude -> where(queryable, fragment("deleted_at IS NULL"))
-          !exclude -> queryable
-        end
+        where(queryable, fragment("deleted_at IS NULL"))
     end
   end
 
@@ -130,6 +127,7 @@ defmodule SoftRepo do
     queryable = exclude_thrash(queryable)
     @repo.paginate(queryable, opts)
   end
+
   defdelegate preload(structs_or_struct_or_nil, preloads, opts \\ []), to: @repo
   defdelegate rollback(value), to: @repo
   defdelegate start_link(opts \\ []), to: @repo

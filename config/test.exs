@@ -1,5 +1,7 @@
 use Mix.Config
 
+config :soft_repo, ecto_repos: [SoftRepo.Repo]
+
 config :soft_repo, repo: SoftRepo.Repo
 
 config :soft_repo, SoftRepo.Repo,

@@ -27,7 +27,7 @@ config :soft_repo, repo: YourApplicationName.Repo
     use Ecto.Migration
 
     def change do
-      create table(:wjatever) do
+      create table(:whatever) do
         add(:my_field, :string)
         add(:my_other_field, :string)
         timestamps()
