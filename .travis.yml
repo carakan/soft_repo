@@ -3,8 +3,8 @@ elixir:
   - 1.7
 otp_release:
   - 21.0
-addons:
-  postgresql: '10'
+services:
+  - postgresql
 env:
   global:
     - MIX_ENV=test
