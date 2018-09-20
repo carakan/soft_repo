@@ -40,37 +40,25 @@ defmodule SoftRepo do
 
   def delete(struct, opts \\ [])
 
-  def delete(struct, opts) when length(opts) == 0 do
+  def delete(struct, opts = [force: true]) do
+    opts = Keyword.drop(opts, [:force])
+    @repo.delete(struct, opts)
+  end
+
+  def delete(struct, _opts) do
     changeset = change(struct, deleted_at: DateTime.utc_now())
     @repo.update(changeset)
   end
 
-  def delete(struct, opts) when length(opts) > 0 do
-    case with_force_option?(opts) do
-      true ->
-        opts = Keyword.drop(opts, [:force])
-        @repo.delete(struct, opts)
-
-      _ ->
-        @repo.delete(struct)
-    end
-  end
-
   def delete_all(queryable, opts \\ [])
 
-  def delete_all(queryable, opts) when length(opts) == 0 do
-    @repo.update_all(queryable, set: [deleted_at: DateTime.utc_now()])
+  def delete_all(queryable, opts = [force: true]) do
+    opts = Keyword.drop(opts, [:force])
+    @repo.delete_all(queryable, opts)
   end
 
-  def delete_all(queryable, opts) when length(opts) > 0 do
-    case with_force_option?(opts) do
-      true ->
-        opts = Keyword.drop(opts, [:force])
-        @repo.delete_all(queryable, opts)
-
-      _ ->
-        @repo.delete_all(queryable)
-    end
+  def delete_all(queryable, _opts) do
+    @repo.update_all(queryable, set: [deleted_at: DateTime.utc_now()])
   end
 
   def restore(queryable, id) do
@@ -101,10 +89,6 @@ defmodule SoftRepo do
         end
     end
   end
-
-  defp with_thrash_option?(opts), do: Keyword.get(opts, :with_thrash)
-
-  defp with_force_option?(opts), do: Keyword.get(opts, :force)
 
   defdelegate aggregate(queryable, aggregate, field, opts), to: @repo
   defdelegate config(), to: @repo
