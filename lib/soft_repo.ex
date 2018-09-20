@@ -8,30 +8,34 @@ defmodule SoftRepo do
 
   def all(queryable, opts \\ [])
 
-  def all(queryable, opts = [with_thrash: false]) do
+  def all(queryable, opts = [with_thrash: true]) do
     opts = Keyword.drop(opts, [:with_thrash])
     @repo.all(queryable, opts)
   end
 
   def all(queryable, opts) do
+    exclude = Keyword.get(opts, :with_thrash, false)
     opts = Keyword.drop(opts, [:with_thrash])
 
     queryable
-    |> exclude_thrash()
+    |> exclude_thrash(!exclude)
     |> @repo.all(opts)
   end
 
   def get(queryable, id, opts \\ [])
 
-  def get(queryable, id, opts = [with_thrash: false]) do
+  def get(queryable, id, opts = [with_thrash: true]) do
     opts = Keyword.drop(opts, [:with_thrash])
     @repo.get(queryable, id, opts)
   end
 
   def get(queryable, id, opts) do
+    exclude = Keyword.get(opts, :with_thrash, false)
     opts = Keyword.drop(opts, [:with_thrash])
-    queryable = exclude_thrash(queryable)
-    @repo.get(queryable, id, opts)
+
+    queryable
+    |> exclude_thrash(!exclude)
+    |> @repo.get(id, opts)
   end
 
   def delete(struct, opts \\ [])
@@ -84,13 +88,17 @@ defmodule SoftRepo do
     Enum.member?(fields, column)
   end
 
-  defp exclude_thrash(queryable) do
+  defp exclude_thrash(queryable, exclude \\ true) do
     case field_exists?(queryable, :deleted_at) do
       false ->
         queryable
 
       true ->
-        where(queryable, fragment("deleted_at IS NULL"))
+        if exclude do
+          where(queryable, fragment("deleted_at IS NULL"))
+        else
+          queryable
+        end
     end
   end
 

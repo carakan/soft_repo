@@ -1,0 +1,15 @@
+language: elixir
+elixir:
+  - 1.7
+otp_release:
+  - 21
+sudo: false
+addons:
+  postgresql: '10'
+env:
+  global:
+    - MIX_ENV=test
+before_script:
+  - psql -c 'create database soft_repo_test;' -U postgres
+script:
+  - mix test
