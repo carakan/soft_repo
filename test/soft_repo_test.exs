@@ -69,6 +69,19 @@ defmodule SoftRepoTest do
     assert(SoftRepo.all(User) == [], "Using soft-delete")
   end
 
+  test "method paginate (scrivener): create records with one already soft deleted" do
+    create_user()
+    create_user()
+    create_user(%{deleted_at: DateTime.utc_now()})
+    assert Enum.count(@repo.all(User)) == 3, "Show normal result"
+    assert(Enum.count(SoftRepo.paginate(User)) == 2, "Using soft-delete")
+
+    assert Enum.count(SoftRepo.paginate(User, with_thrash: true)) == 3,
+           "set false for trash option"
+
+    assert Enum.count(SoftRepo.paginate(User, with_thrash: false)) == 2, "with trash option"
+  end
+
   defp create_user(params \\ %{}) do
     %User{}
     |> User.changeset(Map.merge(%{token: "dummy-token", username: "myusername"}, params))

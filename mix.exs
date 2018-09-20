@@ -4,13 +4,14 @@ defmodule SoftRepo.MixProject do
   def project do
     [
       app: :soft_repo,
-      version: "0.1.0",
-      elixir: "~> 1.4",
-      start_permanent: Mix.env() == :prod,
-      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
+      description: description(),
+      elixir: "~> 1.4",
+      elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
-      description: description()
+      start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
+      version: "0.2.0"
     ]
   end
 
@@ -26,6 +27,7 @@ defmodule SoftRepo.MixProject do
     [
       {:credo, "~> 0.10.1", only: :dev},
       {:ecto, ">= 2.0.0 and < 3.0.0"},
+      {:excoveralls, "~> 0.10.0", only: :test},
       {:ex_doc, "~> 0.19.0", only: :dev},
       {:postgrex, "~> 0.13.0"}
     ]
