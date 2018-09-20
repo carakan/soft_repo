@@ -15,8 +15,10 @@ defmodule SoftRepo do
 
   def all(queryable, opts) do
     opts = Keyword.drop(opts, [:with_thrash])
-    queryable = exclude_thrash(queryable)
-    @repo.all(queryable, opts)
+
+    queryable
+    |> exclude_thrash()
+    |> @repo.all(opts)
   end
 
   def get(queryable, id, opts \\ [])
