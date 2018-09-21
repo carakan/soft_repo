@@ -76,4 +76,5 @@ SoftRepo.restore(MyApp.User, 1) # will restore back the soft deleted record
 
 ## Inspiration
 
-- (Gist)[https://gist.github.com/ahmadshah/83a695ac66d98a833d6d576815e6931d]
+- [Gist](https://gist.github.com/ahmadshah/83a695ac66d98a833d6d576815e6931d)
+- [ecto_soft_delete](https://github.com/revelrylabs/ecto_soft_delete)
