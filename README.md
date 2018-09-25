@@ -18,7 +18,7 @@ def deps do
 end
 ```
 
-* Configure `soft_repo` to use your application repo in `config/config.exs`:
+- Configure `soft_repo` to use your application repo in `config/config.exs`:
 
 ```elixir
 config :soft_repo, repo: YourApplicationName.Repo
@@ -41,7 +41,7 @@ config :soft_repo, repo: YourApplicationName.Repo
   end
 ```
 
-* **Schema**
+- **Schema**
 
 Import `SoftRepo.Schema` into your module, then add `soft_repo_schema()` to your schema block:
 
@@ -71,7 +71,18 @@ SoftRepo.delete_all(MyApp.User, force: true) # will permanently delete all recor
 SoftRepo.restore(MyApp.User, 1) # will restore back the soft deleted record
 ```
 
+- **Pagination**, to do pagination (using scrivener) I added a function to use in your `Repo` injected pagination:
+
+```elixir
+SoftRepo.paginate(MyApp.User) # will exclude soft deleted records paginated
+```
+
 ## Inspiration
 
 - [Gist](https://gist.github.com/ahmadshah/83a695ac66d98a833d6d576815e6931d)
 - [ecto_soft_delete](https://github.com/revelrylabs/ecto_soft_delete)
+
+## TODO's
+
+- [ ] Use Metaprogramming to change from set config Repo to inject into a module.
+- [ ] Support associations, like `has_many(:whatevers, on_delete: :soft_delete)`
