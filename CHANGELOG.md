@@ -1,9 +1,14 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
+
+- Add `get_by` and `one` `Repo` methods
+
+## 0.2.0
 
 - Add migration and schema `magic` declaration fields.
 - Fix error on queries for DateTime.
+- Add test's
 
 ## 0.1.0
 

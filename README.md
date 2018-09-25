@@ -9,7 +9,7 @@ A basic implementation of soft delete using repository pattern (Ecto Repo).
 ```elixir
 def deps do
   [
-    {:soft_repo, "~> 0.1.0"}
+    {:soft_repo, "~> 0.2.0"}
   ]
 end
 ```
@@ -54,23 +54,15 @@ config :soft_repo, repo: YourApplicationName.Repo
 
 - **Queries**
 
-```elisir
+```elixir
 SoftRepo.get(MyApp.User, 1) # will return nil if record is in soft delete state
-
 SoftRepo.get(MyApp.User, 1, with_thrash: true) # will return the soft deleted record
-
 SoftRepo.all(MyApp.User) # will exclude soft deleted records
-
 SoftRepo.all(MyApp.User, with_thrash: true) # will include soft deleted records
-
 SoftRepo.delete(user) # will update the deleted_at column
-
 SoftRepo.delete(user, force: true) # will permanently delete the record
-
 SoftRepo.delete_all(MyApp.User) # will updated the deleted_at columns
-
 SoftRepo.delete_all(MyApp.User, force: true) # will permanently delete all records
-
 SoftRepo.restore(MyApp.User, 1) # will restore back the soft deleted record
 ```
 

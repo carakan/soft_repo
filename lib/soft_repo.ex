@@ -66,36 +66,27 @@ defmodule SoftRepo do
     @repo.update(changeset)
   end
 
-  defp schema_fields(%{from: {_source, schema}}) when schema != nil,
-    do: schema.__schema__(:fields)
-
-  defp field_exists?(queryable, column) do
-    query = to_query(queryable)
-    fields = schema_fields(query)
-
-    Enum.member?(fields, column)
-  end
-
-  defp exclude_thrash(queryable, exclude \\ true) do
-    case field_exists?(queryable, :deleted_at) do
-      false ->
-        queryable
-
-      true ->
-        if exclude do
-          where(queryable, fragment("deleted_at IS NULL"))
-        else
-          queryable
-        end
-    end
-  end
-
   defdelegate aggregate(queryable, aggregate, field, opts), to: @repo
   defdelegate config(), to: @repo
   defdelegate delete!(struct, opts \\ []), to: @repo
   defdelegate get!(queryable, id, opts \\ []), to: @repo
   defdelegate get_by!(queryable, clauses, opts \\ []), to: @repo
-  defdelegate get_by(queryable, clauses, opts \\ []), to: @repo
+  def get_by(queryable, clauses, opts \\ [])
+
+  def get_by(queryable, clauses, opts = [with_thrash: true]) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    @repo.get_by(queryable, clauses, opts)
+  end
+
+  def get_by(queryable, clauses, opts) do
+    exclude = Keyword.get(opts, :with_thrash, false)
+    opts = Keyword.drop(opts, [:with_thrash])
+
+    queryable
+    |> exclude_thrash(!exclude)
+    |> @repo.get_by(clauses, opts)
+  end
+
   defdelegate in_transaction?(), to: @repo
   defdelegate init(arg0, config), to: @repo
   defdelegate insert!(struct, opts \\ []), to: @repo
@@ -104,7 +95,22 @@ defmodule SoftRepo do
   defdelegate insert_or_update!(changeset, opts \\ []), to: @repo
   defdelegate insert_or_update(changeset, opts \\ []), to: @repo
   defdelegate one!(queryable, opts \\ []), to: @repo
-  defdelegate one(queryable, opts \\ []), to: @repo
+
+  def one(queryable, opts \\ [])
+
+  def one(queryable, opts = [with_thrash: true]) do
+    opts = Keyword.drop(opts, [:with_thrash])
+    @repo.one(queryable, opts)
+  end
+
+  def one(queryable, opts) do
+    exclude = Keyword.get(opts, :with_thrash, false)
+    opts = Keyword.drop(opts, [:with_thrash])
+
+    queryable
+    |> exclude_thrash(!exclude)
+    |> @repo.one(opts)
+  end
 
   @doc """
   Scrivener pagination.
@@ -134,4 +140,28 @@ defmodule SoftRepo do
   defdelegate update!(struct, opts \\ []), to: @repo
   defdelegate update(struct, opts \\ []), to: @repo
   defdelegate update_all(queryable, updates, opts \\ []), to: @repo
+
+  defp schema_fields(%{from: {_source, schema}}) when schema != nil,
+    do: schema.__schema__(:fields)
+
+  defp field_exists?(queryable, column) do
+    query = to_query(queryable)
+    fields = schema_fields(query)
+
+    Enum.member?(fields, column)
+  end
+
+  defp exclude_thrash(queryable, exclude) do
+    case field_exists?(queryable, :deleted_at) do
+      false ->
+        queryable
+
+      true ->
+        if exclude do
+          where(queryable, fragment("deleted_at IS NULL"))
+        else
+          queryable
+        end
+    end
+  end
 end
