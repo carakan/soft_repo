@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/carakan/soft_repo.svg?branch=master)](https://travis-ci.org/carakan/soft_repo)
+[![Hex.pm](https://img.shields.io/hexpm/dt/soft_repo.svg)](https://hex.pm/packages/soft_repo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # SoftRepo
 
 A basic implementation of soft delete using repository pattern (Ecto Repo).
@@ -14,9 +18,9 @@ def deps do
 end
 ```
 
-- Configure `soft_repo` to use your application repo in config/config.exs:
+* Configure `soft_repo` to use your application repo in `config/config.exs`:
 
-```
+```elixir
 config :soft_repo, repo: YourApplicationName.Repo
 ```
 
@@ -37,8 +41,9 @@ config :soft_repo, repo: YourApplicationName.Repo
   end
 ```
 
-- **Schema**
-  Import `SoftRepo.Schema` into your Schema module, then add `soft_repo_schema()` to your schema
+* **Schema**
+
+Import `SoftRepo.Schema` into your module, then add `soft_repo_schema()` to your schema block:
 
 ```elixir
   defmodule Whatever do
@@ -52,7 +57,7 @@ config :soft_repo, repo: YourApplicationName.Repo
   end
 ```
 
-- **Queries**
+- **Queries** Now you can call `SoftRepo` gobally or alias to your `Repo`
 
 ```elixir
 SoftRepo.get(MyApp.User, 1) # will return nil if record is in soft delete state
