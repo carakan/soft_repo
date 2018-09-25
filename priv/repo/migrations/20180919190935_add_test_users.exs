@@ -1,15 +1,17 @@
 defmodule Repo.Migrations.AddTestUsers do
   use Ecto.Migration
+  import SoftRepo.Migration
 
   def change do
     create table(:users) do
       add(:token, :string, null: false)
       add(:username, :string, null: false)
-      SoftRepo.Migration.soft_repo_column()
+      soft_repo_column()
 
       timestamps()
     end
 
     create(index(:users, [:token]))
+    soft_repo_index(:users)
   end
 end

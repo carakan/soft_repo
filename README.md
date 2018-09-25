@@ -4,7 +4,7 @@
 
 # SoftRepo
 
-A basic implementation of soft delete using repository pattern (Ecto Repo).
+Simple implementation of soft delete using repository pattern (Ecto Repo).
 
 ## Installation
 

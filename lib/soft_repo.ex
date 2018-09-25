@@ -1,6 +1,9 @@
 defmodule SoftRepo do
+  @moduledoc """
+  Contains get/delete functions to do a soft delete
+  """
+
   import Ecto.Changeset, only: [change: 2]
-  import Ecto.Query, only: [where: 2]
   import Ecto.Queryable, only: [to_query: 1]
   require Ecto.Query
 
@@ -158,7 +161,7 @@ defmodule SoftRepo do
 
       true ->
         if exclude do
-          where(queryable, fragment("deleted_at IS NULL"))
+          Ecto.Query.where(queryable, fragment("deleted_at IS NULL"))
         else
           queryable
         end

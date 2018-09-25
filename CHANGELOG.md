@@ -2,7 +2,8 @@
 
 ## 0.3.0
 
-- Add `get_by` and `one` `Repo` methods
+- Add `get_by` and `one` `Repo` methods.
+- Add function to create a `index` in migration.
 
 ## 0.2.0
 
