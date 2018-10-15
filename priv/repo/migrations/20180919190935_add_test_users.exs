@@ -7,7 +7,13 @@ defmodule Repo.Migrations.AddTestUsers do
       add(:token, :string, null: false)
       add(:username, :string, null: false)
       soft_repo_column()
+      timestamps()
+    end
 
+    create table(:subscriptions) do
+      add(:user_id, references("users"))
+      add(:service, :string)
+      soft_repo_column()
       timestamps()
     end
 

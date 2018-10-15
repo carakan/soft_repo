@@ -5,10 +5,9 @@ defmodule SoftRepoTest do
   @repo SoftRepo.Client.repo()
 
   setup do
-    @repo.delete_all(User)
-
     on_exit(fn ->
-      @repo.delete_all(User)
+      @repo.truncate(User)
+      @repo.truncate(Subscription)
     end)
 
     :ok
@@ -104,11 +103,33 @@ defmodule SoftRepoTest do
     assert Enum.count(SoftRepo.paginate(User, with_thrash: false)) == 2, "with trash option"
   end
 
+  test "test soft delete relationship" do
+    user = create_user()
+    create_service()
+    create_service()
+    create_service(%{user_id: user.id})
+
+    SoftRepo.delete(user)
+    res = SoftRepo.all(Subscription)
+    ress = @repo.all(Subscription)
+    assert Enum.count(SoftRepo.all(Subscription)) == 2, "Show normal result"
+    assert Enum.count(@repo.all(Subscription)) == 3, "Show normal result"
+  end
+
   defp create_user(params \\ %{}) do
     params = Map.merge(%{token: "dummy-token", username: "myusername"}, params)
 
     %User{}
     |> User.changeset(params)
+    |> @repo.insert!
+  end
+
+  defp create_service(params \\ %{}) do
+    params = Map.merge(%{service: "dummy service"}, params)
+    IO.inspect(params)
+
+    %Subscription{}
+    |> Subscription.changeset(params)
     |> @repo.insert!
   end
 end

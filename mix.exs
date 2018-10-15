@@ -26,7 +26,7 @@ defmodule SoftRepo.MixProject do
   defp deps do
     [
       {:credo, "~> 0.10.1", only: :dev},
-      {:ecto, ">= 2.0.0 and < 3.0.0"},
+      {:ecto, github: "carakan/ecto", branch: "v2.2"},
       {:excoveralls, "~> 0.10.0", only: :test},
       {:ex_doc, "~> 0.19.0", only: :dev},
       {:postgrex, "~> 0.13.0"}
